@@ -85,10 +85,19 @@ class NQueensSAT:
             
         solver.append_formula(self.cnf)
             
+        import threading
+        timer = threading.Timer(60.0, solver.interrupt)
+        timer.start()
+        
         start_solve = time.time()
         is_sat = solver.solve()
+        timer.cancel()
         solve_time = time.time() - start_solve
         
+        if solve_time >= 60.0:
+            solver.delete()
+            return {'error': 'run time error', 'is_sat': False}
+            
         solution = []
         if is_sat:
             model = solver.get_model()

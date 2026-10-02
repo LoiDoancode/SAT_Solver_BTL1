@@ -44,11 +44,15 @@ def solve_cplex_mip(n):
             
         # Suppress console output
         model.context.solver.log_output = False
+        model.set_time_limit(60.0)
         
         start_time = time.time()
         solution_obj = model.solve()
         solve_time = time.time() - start_time
         
+        if solve_time >= 60.0:
+            return {'error': 'run time error', 'is_sat': False}
+            
         is_sat = solution_obj is not None
         solution = []
         if is_sat:
@@ -91,6 +95,9 @@ def solve_cplex_cp(n):
         sol = model.solve(TimeLimit=60, LogVerbosity="Quiet")
         solve_time = time.time() - start_time
         
+        if solve_time >= 60.0:
+            return {'error': 'run time error', 'is_sat': False}
+            
         is_sat = sol and sol.is_solution()
         solution = []
         if is_sat:

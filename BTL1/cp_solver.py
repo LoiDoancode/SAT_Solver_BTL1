@@ -24,11 +24,15 @@ def solve_ortools_cp_sat(n):
     model.AddAllDifferent([queens[i] - i for i in range(n)])
     
     solver = cp_model.CpSolver()
+    solver.parameters.max_time_in_seconds = 60.0
     
     start_time = time.time()
     status = solver.Solve(model)
     solve_time = time.time() - start_time
     
+    if solve_time >= 60.0 or status == cp_model.UNKNOWN:
+        return {'error': 'run time error', 'is_sat': False}
+        
     solution = []
     if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:
         solution = [solver.Value(queens[i]) for i in range(n)]

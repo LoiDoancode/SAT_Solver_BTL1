@@ -46,11 +46,15 @@ def solve_gurobi_mip(n):
             )
             
         # We don't have an objective function, just finding a feasible solution
+        model.setParam('TimeLimit', 60.0)
         
         start_time = time.time()
         model.optimize()
         solve_time = time.time() - start_time
         
+        if model.status == GRB.TIME_LIMIT or solve_time >= 60.0:
+            return {'error': 'run time error', 'is_sat': False}
+            
         solution = []
         is_sat = False
         if model.status == GRB.OPTIMAL or model.status == GRB.SOLUTION_LIMIT:

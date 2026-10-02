@@ -32,7 +32,7 @@ def run_benchmarks():
                 res_cp = solve_ortools_cp_sat(n)
                 if "error" not in res_cp and res_cp["is_sat"]:
                     cp_time = res_cp["solve_time"]
-                    print(f"  [CP-SAT (OR-Tools)] Thời gian: {cp_time:.4f}s")
+                    print(f"  [CP-SAT (OR-Tools)] Thời gian tìm nghiệm đầu tiên: {cp_time:.4f}s")
             row_data.append(cp_time)
             
             # 2. CPLEX CP
@@ -41,7 +41,7 @@ def run_benchmarks():
                 res = solve_cplex_cp(n)
                 if "error" not in res and res.get("is_sat"):
                     cplex_cp_time = res["solve_time"]
-                    print(f"  [CPLEX CP] Thời gian: {cplex_cp_time:.4f}s")
+                    print(f"  [CPLEX CP] Thời gian tìm nghiệm đầu tiên: {cplex_cp_time:.4f}s")
                 elif "error" in res:
                     print(f"  [CPLEX CP] Lỗi: {res['error']}")
             row_data.append(cplex_cp_time)
@@ -52,7 +52,7 @@ def run_benchmarks():
                 res_mip = solve_gurobi_mip(n)
                 if "error" not in res_mip and res_mip.get("is_sat"):
                     mip_time = res_mip["solve_time"]
-                    print(f"  [Gurobi MIP] Thời gian: {mip_time:.4f}s")
+                    print(f"  [Gurobi MIP] Thời gian tìm nghiệm đầu tiên: {mip_time:.4f}s")
                 elif "error" in res_mip:
                     print(f"  [Gurobi MIP] Lỗi: {res_mip['error']}")
             row_data.append(mip_time)
@@ -63,7 +63,7 @@ def run_benchmarks():
                 res = solve_cplex_mip(n)
                 if "error" not in res and res.get("is_sat"):
                     cplex_mip_time = res["solve_time"]
-                    print(f"  [CPLEX MIP] Thời gian: {cplex_mip_time:.4f}s")
+                    print(f"  [CPLEX MIP] Thời gian tìm nghiệm đầu tiên: {cplex_mip_time:.4f}s")
                 elif "error" in res:
                     print(f"  [CPLEX MIP] Lỗi: {res['error']}")
             row_data.append(cplex_mip_time)
@@ -109,7 +109,12 @@ if __name__ == "__main__":
     # run_benchmarks()
     HAS_CPLEX_MIP = False
     HAS_CPLEX_CP = False
-    n_size = 40
+    try:
+        n_size = int(input("Nhập giá trị N (số lượng quân Hậu): "))
+    except ValueError:
+        print("Vui lòng nhập một số nguyên hợp lệ.")
+        exit(1)
+        
     print("=" * 65)
     print(f"   THỬ NGHIỆM ĐỘC LẬP & SO SÁNH NHANH CÁC SOLVER - N = {n_size}")
     print("=" * 65)
@@ -119,7 +124,7 @@ if __name__ == "__main__":
     if HAS_ORTOOLS:
         res = solve_ortools_cp_sat(n_size)
         if "error" not in res and res.get("is_sat"):
-            print(f"✅ [OR-Tools CP-SAT] Thời gian giải: {res['solve_time']:.4f}s")
+            print(f"✅ [OR-Tools CP-SAT] Thời gian tìm nghiệm đầu tiên: {res['solve_time']:.4f}s")
         else:
             print(f"❌ [OR-Tools CP-SAT] Lỗi: {res.get('error', 'Unsat')}")
     else:
@@ -128,7 +133,7 @@ if __name__ == "__main__":
     if HAS_CPLEX_CP:
         res = solve_cplex_cp(n_size)
         if "error" not in res and res.get("is_sat"):
-            print(f"✅ [CPLEX CP]        Thời gian giải: {res['solve_time']:.4f}s")
+            print(f"✅ [CPLEX CP]        Thời gian tìm nghiệm đầu tiên: {res['solve_time']:.4f}s")
         else:
             print(f"❌ [CPLEX CP]        Lỗi: {res.get('error', 'Unsat')}")
     else:
@@ -139,7 +144,7 @@ if __name__ == "__main__":
     if HAS_GUROBI:
         res = solve_gurobi_mip(n_size)
         if "error" not in res and res.get("is_sat"):
-            print(f"✅ [Gurobi MIP]      Thời gian giải: {res['solve_time']:.4f}s")
+            print(f"✅ [Gurobi MIP]      Thời gian tìm nghiệm đầu tiên: {res['solve_time']:.4f}s")
         else:
             print(f"❌ [Gurobi MIP]      Lỗi: {res.get('error', 'Unsat')}")
     else:
@@ -148,7 +153,7 @@ if __name__ == "__main__":
     if HAS_CPLEX_MIP:
         res = solve_cplex_mip(n_size)
         if "error" not in res and res.get("is_sat"):
-            print(f"✅ [CPLEX MIP]       Thời gian giải: {res['solve_time']:.4f}s")
+            print(f"✅ [CPLEX MIP]       Thời gian tìm nghiệm đầu tiên: {res['solve_time']:.4f}s")
         else:
             print(f"❌ [CPLEX MIP]       Lỗi: {res.get('error', 'Unsat')}")
     else:
@@ -161,7 +166,7 @@ if __name__ == "__main__":
             solver = NQueensSAT(n_size, encoding_name=enc)
             res = solver.solve("cadical")
             if "error" not in res and res.get("is_sat"):
-                print(f"✅ [SAT - {enc.upper():<10}] Tổng thời gian: {res['total_time']:.4f}s (Encode: {res['encode_time']:.4f}s, Solve: {res['solve_time']:.4f}s)")
+                print(f"✅ [SAT - {enc.upper():<10}] Tổng thời gian: {res['total_time']:.4f}s (Encode: {res['encode_time']:.4f}s, Tìm nghiệm đầu: {res['solve_time']:.4f}s)")
             else:
                 print(f"❌ [SAT - {enc.upper():<10}] Lỗi: {res.get('error', 'Unsat')}")
     else:
