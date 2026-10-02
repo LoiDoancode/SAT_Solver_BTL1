@@ -12,12 +12,15 @@ Nghiên cứu và đánh giá thực nghiệm hiệu năng giải bài toán N-Q
 ---
 
 ## 📁 Cấu trúc dự án
-
 ```text
-.
-├── encodings/          # Triển khai các thuật toán mã hóa SAT (Pairwise, Binary, Sequential Counter...)
-├── solvers/            # Mô hình bài toán cho CP (OR-Tools, CPLEX CP) và ILP (Gurobi, CPLEX MIP)
-├── experiments/        # Script chạy thực nghiệm tự động theo kích thước N = [8, 16, ..., 1000+]
-├── results/            # Báo cáo kết quả: Thời gian giải (Execution Time), Bộ nhớ (Peak Memory), File log
-├── main.py             # Entrypoint chính để chạy benchmark
-└── README.md
+BTL1/
+├── __pycache__/        # Thư mục cache của Python
+├── .gitignore          # Cấu hình bỏ qua các file tạm/không cần thiết trong Git
+├── cp_solver.py        # Bộ giải sử dụng Lập trình ràng buộc (Constraint Programming)
+├── cplex_solver.py     # Bộ giải sử dụng IBM ILOG CPLEX Optimization Studio
+├── main.py             # File chạy chính của chương trình
+├── mip_solver.py       # Bộ giải Quy hoạch tuyến tính số nguyên hỗn hợp (MIP)
+├── plan.txt            # Kế hoạch / Mô tả bài toán / Lộ trình thực hiện
+├── results.csv         # File lưu kết quả thực nghiệm và so sánh hiệu năng
+├── sat_solver.py       # Bộ giải SAT (Boolean Satisfiability)
+└── utils.py            # Các hàm bổ trợ (đọc/ghi file, xử lý dữ liệu, vẽ biểu đồ...)
