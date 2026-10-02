@@ -1,0 +1,46 @@
+KẾ HOẠCH CHI TIẾT THỰC HIỆN BÀI TẬP LỚN 1 - N-QUEENS SOLVER
+
+Giai đoạn 1: Tìm hiểu yêu cầu và Chuẩn bị môi trường (Đã hoàn thành)
+1.1. Đọc hiểu bài toán N-Queens và các điều kiện ràng buộc:
+     - Có đúng 1 quân hậu trên mỗi hàng (Exactly-One).
+     - Có đúng 1 quân hậu trên mỗi cột (Exactly-One).
+     - Có tối đa 1 quân hậu trên mỗi đường chéo chính (At-Most-One).
+     - Có tối đa 1 quân hậu trên mỗi đường chéo phụ (At-Most-One).
+1.2. Cài đặt các thư viện giải quyết (Solvers):
+     - Thư viện `python-sat` (PySAT) để dùng các solver như Cadical, Glucose.
+     - Thư viện `ortools` (Google OR-Tools) dùng cho Constraint Programming (CP-SAT).
+1.3. Khởi tạo cấu trúc project gồm các module: `sat_solver.py`, `cp_solver.py`, `utils.py`, `main.py`.
+
+Giai đoạn 2: Lập trình SAT Encoding cho N-Queens (Đã hoàn thành)
+2.1. Mã hóa điều kiện ALO (At-Least-One):
+     - Rất đơn giản, tạo ra mệnh đề (x1 V x2 V ... V xN) cho từng hàng, cột.
+2.2. Mã hóa điều kiện AMO (At-Most-One) bằng phương pháp Sequential Counter (Sinz 2005):
+     - Xây dựng logic đếm chuỗi tuần tự sử dụng thêm N-1 biến phụ trợ.
+     - Cấu trúc mệnh đề:
+       + Khởi tạo: ~x_1 V s_1
+       + Lan truyền (1 < i < N): ~x_i V s_i; ~s_{i-1} V s_i; ~x_i V ~s_{i-1}
+       + Kết thúc: ~x_N V ~s_{N-1}
+2.3. Tích hợp PySAT Solver:
+     - Nạp các mệnh đề (clauses) vào solver (chọn Cadical vì xử lý lượng biến lớn rất nhanh).
+     - Chạy solver và trích xuất (decode) kết quả biến boolean thành toạ độ bàn cờ.
+
+Giai đoạn 3: Lập trình Solvers để đối sánh (Đã hoàn thành)
+3.1. Dùng Google OR-Tools xây dựng mô hình Constraint Programming (CP):
+     - Ứng dụng ràng buộc toàn cục `AddAllDifferent` rất mạnh của CP cho hàng, đường chéo chính, đường chéo phụ.
+3.2. Chạy CP-SAT solver để đảm bảo tính đúng đắn và chuẩn bị dữ liệu so sánh tốc độ với SAT.
+
+Giai đoạn 4: Đánh giá hiệu năng và Thu thập dữ liệu (Thực nghiệm) (Tiếp theo)
+4.1. Chuẩn bị kịch bản thực nghiệm:
+     - Tạo vòng lặp tăng dần kích thước N: N=10, 20, 50, 100...
+     - Đo lường và lưu trữ các thông số: Thời gian tạo Encoding, Thời gian Solving, Số lượng Variables, Số lượng Clauses.
+4.2. Chạy thử trên máy tính cá nhân. Ghi kết quả so sánh giữa `SAT (Sequential)` và `CP-SAT` ra file CSV để vẽ đồ thị.
+4.3. Đánh giá tính chất: 
+     - Nhận xét tốc độ tăng số lượng biến của Sequential Encoding so với Binary hay Commander Encoding (nếu muốn làm điểm cộng).
+
+Giai đoạn 5: Viết Báo Cáo & Nộp Bài
+5.1. Tạo cấu trúc báo cáo bằng template LaTeX của Elsevier (\documentclass[a4paper,fleqn]{cas-sc}).
+5.2. Nội dung Báo cáo (Abstract, Giới thiệu bài toán, Phương pháp Encode, Thực nghiệm và Kết luận).
+5.3. Trình bày biểu đồ so sánh tổng thời gian và rút ra kết luận.
+5.4. Đưa source code lên Github cá nhân (Repository: N-Queens-Solver).
+5.5. Đính kèm link Github vào báo cáo tại mục "Data Availability" (Yêu cầu bắt buộc).
+5.6. Rà soát, kiểm tra file PDF báo cáo và Nộp cho giảng viên.
