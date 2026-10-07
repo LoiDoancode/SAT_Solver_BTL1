@@ -6,8 +6,8 @@ from cplex_solver import solve_cplex_mip, solve_cplex_cp, HAS_CPLEX_MIP, HAS_CPL
 from utils import print_board
 
 def run_benchmarks():
-    sizes = [10, 20, 30, 40, 50, 60]  # Thử nghiệm với các kích thước lớn
-    encodings = ["seqcounter", "binary", "pairwise"]  # Các phương pháp encoding từ PySAT
+    sizes = list(range(10, 210, 10))  # N = 10, 20, ..., 200
+    encodings = ["seqcounter", "binary", "pairwise", "product", "commander"]  # Các phương pháp encoding từ PySAT và thủ công
     
     csv_file = "results.csv"
     
@@ -110,10 +110,14 @@ if __name__ == "__main__":
     HAS_CPLEX_MIP = False
     HAS_CPLEX_CP = False
     try:
-        n_size = int(input("Nhập giá trị N (số lượng quân Hậu): "))
+        n_size = int(input("Nhập giá trị N (số lượng quân Hậu, nhập 0 để chạy Benchmarks ra file CSV): "))
     except ValueError:
         print("Vui lòng nhập một số nguyên hợp lệ.")
         exit(1)
+        
+    if n_size == 0:
+        run_benchmarks()
+        exit(0)
         
     print("=" * 65)
     print(f"   THỬ NGHIỆM ĐỘC LẬP & SO SÁNH NHANH CÁC SOLVER - N = {n_size}")
@@ -162,7 +166,7 @@ if __name__ == "__main__":
     # 3. BOOLEAN SATISFIABILITY (SAT)
     print("\n--- 3. SAT SOLVING (Cadical) ---")
     if HAS_PYSAT:
-        for enc in ["seqcounter", "binary", "pairwise"]:
+        for enc in ["seqcounter", "binary", "pairwise", "product", "commander"]:
             solver = NQueensSAT(n_size, encoding_name=enc)
             res = solver.solve("cadical")
             if "error" not in res and res.get("is_sat"):
@@ -173,3 +177,4 @@ if __name__ == "__main__":
         print("⏭ [SAT]             Bỏ qua (chưa cài python-sat)")
         
     print("\n" + "=" * 65)
+3
